@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 /*
  * Cloud class implements individual cloud game object spawned.
@@ -7,34 +9,62 @@ using UnityEngine;
  */
 public class Cloud : MonoBehaviour{
 
-    private string color; // Change string to Color class
+    public GameObject cloudPrefab;
+    private Color color; // Change string to Color class
     private int x;
     private int y;
-    public GameObject cloudPrefab;
-    public Cloud() {
-        color = "";
-        x = 0;
-        y = 0;
+    private SpriteRenderer frontCloud;
+    private SpriteRenderer backCloud;
+    private bool isInitialized;
+
+    public void InitializeCloud() {
+        // frontCloud = cloudPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
+        frontCloud = transform.Find("border_cloud_front").GetComponent<SpriteRenderer>();
+        backCloud = transform.Find("border_cloud_back").GetComponent<SpriteRenderer>();
+
+        // Optionally, log the references to verify they're correct
+        if (frontCloud == null || backCloud == null)
+        {
+            Debug.LogError("Failed to find child GameObjects or their SpriteRenderer components!");
+        } else {
+            Debug.Log("Child Objects have been found!");
+        }
+
+        isInitialized = true;
     }
 
-    public Cloud(string color) {
-        x = 0;
-        y = 0;
-        this.color = color;
-    }
-
-    public Cloud(int x, int y, string color) {
-        this.x = x;
-        this.y = y;
-        this.color = color;
-    }
-
-    public (int, int, string) GetCloud() {
+    public (int, int, Color) GetCloud() {
         return (x, y, color);
     }
 
     public void SetColor(string newColor){
-        color = newColor;
+        if(!isInitialized) {
+            InitializeCloud();
+        }
+
+        // guard for reference to front and back cloud
+        if (frontCloud is null || backCloud is null) {
+            Debug.LogError($"Error: frontCloud reference -> {frontCloud}; backCloud reference -> {backCloud}");
+            return;
+        }
+
+        switch (newColor) {
+            case "blue":
+                color = Color.blue;
+                break;
+            case "red":
+                color = Color.red;
+                break;
+            case "yellow":
+                color = Color.yellow;
+                break;
+            default:
+                color = Color.white;
+                break;
+        }
+
+        frontCloud.color = color;
+        backCloud.color = color;
     }
 
     public void SetCoordinate(int newX, int newY){

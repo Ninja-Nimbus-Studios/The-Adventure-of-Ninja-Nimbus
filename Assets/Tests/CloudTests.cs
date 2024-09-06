@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
@@ -26,22 +27,6 @@ public class CloudTests
         Assert.AreNotEqual(3, cloudData.Item1);
         Assert.AreNotEqual(3, cloudData.Item2);
         Assert.AreNotEqual("rainbow", cloudData.Item3);
-    }
-
-    // Test Constructor with color input for cloud class
-    [Test]
-    public void TestCloudInitialization()
-    {
-        // Act: Create a cloud and set its properties
-        Cloud cloud = new Cloud("yellow");
-        cloud.SetCoordinate(3, 4);
-        cloud.SetColor("yellow");
-
-        // Assert: Check if the cloud properties are set correctly
-        var cloudData = cloud.GetCloud();
-        Assert.AreEqual(3, cloudData.Item1);
-        Assert.AreEqual(4, cloudData.Item2);
-        Assert.AreEqual("yellow", cloudData.Item3);
     }
 
     // Test CloudMap creation has correct color
