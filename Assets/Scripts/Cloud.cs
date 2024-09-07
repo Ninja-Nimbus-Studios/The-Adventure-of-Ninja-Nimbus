@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using UnityEngine.UI;
 
 /*
  * Cloud class implements individual cloud game object spawned.
@@ -13,14 +14,14 @@ public class Cloud : MonoBehaviour{
     private Color color; // Change string to Color class
     private int x;
     private int y;
-    private SpriteRenderer frontCloud;
-    private SpriteRenderer backCloud;
-    private bool isInitialized;
+    private Image frontCloud;
+    private Image backCloud;
+    private bool isInitialized = false;
 
     public void InitializeCloud() {
         // frontCloud = cloudPrefab.GetComponentsInChildren<SpriteRenderer>()[0];
-        frontCloud = transform.Find("border_cloud_front").GetComponent<SpriteRenderer>();
-        backCloud = transform.Find("border_cloud_back").GetComponent<SpriteRenderer>();
+        frontCloud = transform.Find("border_cloud_front").GetComponent<Image>();
+        backCloud = transform.Find("border_cloud_back").GetComponent<Image>();
 
         // Optionally, log the references to verify they're correct
         if (frontCloud == null || backCloud == null)
