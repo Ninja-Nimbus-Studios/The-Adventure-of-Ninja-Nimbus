@@ -9,9 +9,11 @@ using UnityEngine;
 public class CloudMap : MonoBehaviour{
 
     private List<List<GameObject>> cloudMap;
+    private LineManager lineManager;
     private string stageName;
     private int hoppedClouds;
     [SerializeField] private GameObject cloud;
+    [SerializeField] private GameObject gameMap;
 
     void Start()
     {
@@ -21,15 +23,15 @@ public class CloudMap : MonoBehaviour{
         var colorSwitch = 0;
 
         for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 5; col++) {
+            for (int col = 0; col < 20; col++) {
                 if(colorSwitch == 0){
-                    listOfClouds.Add(new Tuple<int, int, string>(row,col,"blue"));
+                    listOfClouds.Add(new Tuple<int, int, string>(row * 2,col * 2,"blue"));
                 } else if(colorSwitch == 1){
-                    listOfClouds.Add(new Tuple<int, int, string>(row,col,"red"));
+                    listOfClouds.Add(new Tuple<int, int, string>(row * 2,col * 2,"red"));
                 } else if(colorSwitch == 2) {
-                    listOfClouds.Add(new Tuple<int, int, string>(row,col,"yellow"));
+                    listOfClouds.Add(new Tuple<int, int, string>(row * 2,col * 2,"yellow"));
                 } else {
-                    listOfClouds.Add(new Tuple<int, int, string>(row,col,"white"));
+                    listOfClouds.Add(new Tuple<int, int, string>(row * 2,col * 2,"white"));
                     colorSwitch = -1;
                 }
                 colorSwitch += 1;
@@ -44,6 +46,7 @@ public class CloudMap : MonoBehaviour{
         //         Debug.Log($"Newly created cloud at {cloud.transform.position}");
         //     }
         // }
+        lineManager = gameObject.AddComponent<LineManager>();
     }
 
     public CloudMap() {
@@ -74,15 +77,13 @@ public class CloudMap : MonoBehaviour{
                 cloudMap[x].Add(null);
             }
 
-            GameObject newCloud = Instantiate(cloud);
-            newCloud.transform.position = new Vector3(x, y, 0);
+            GameObject newCloud = Instantiate(cloud, gameMap.transform);
+            // newCloud.transform.position = new Vector3(x, y, 0);
             
             // Get the Cloud script from the instantiated cloud object
             Cloud cloudScript = newCloud.GetComponent<Cloud>();
 
-            cloudScript.InitializeCloud();
-
-            cloudScript.SetColor(color); // I need to make this async so that color is set after child is found
+            cloudScript.SetColor(color); // I need to make this async so that color is
 
             cloudMap[x][y] = newCloud;
         }
@@ -95,4 +96,18 @@ public class CloudMap : MonoBehaviour{
         }
         cloudMap.Clear();
     }
+
+    // Call this method when a cloud is selected
+    public void OnCloudSelected(GameObject cloudToAdd)
+    {
+        lineManager.AddCloud(cloudToAdd);
+        // Optionally, you can change the color or other properties of the line
+    }
+
+    // Call this method when a cloud is deselected
+    public void OnCloudDeselected(GameObject cloudToDelete)
+    {
+        lineManager.RemoveCloud(cloudToDelete);
+    }
+
 }
