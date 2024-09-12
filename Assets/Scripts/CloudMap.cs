@@ -9,6 +9,7 @@ using UnityEngine;
 public class CloudMap : MonoBehaviour{
 
     private List<List<GameObject>> cloudMap;
+    private LineManager lineManager;
     private string stageName;
     private int hoppedClouds;
     [SerializeField] private GameObject cloud;
@@ -45,6 +46,7 @@ public class CloudMap : MonoBehaviour{
         //         Debug.Log($"Newly created cloud at {cloud.transform.position}");
         //     }
         // }
+        lineManager = gameObject.AddComponent<LineManager>();
     }
 
     public CloudMap() {
@@ -94,4 +96,18 @@ public class CloudMap : MonoBehaviour{
         }
         cloudMap.Clear();
     }
+
+    // Call this method when a cloud is selected
+    public void OnCloudSelected(GameObject cloudToAdd)
+    {
+        lineManager.AddCloud(cloudToAdd);
+        // Optionally, you can change the color or other properties of the line
+    }
+
+    // Call this method when a cloud is deselected
+    public void OnCloudDeselected(GameObject cloudToDelete)
+    {
+        lineManager.RemoveCloud(cloudToDelete);
+    }
+
 }
